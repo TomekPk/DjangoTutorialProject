@@ -1,0 +1,9 @@
+{% if latest_question_list %}
+    <ul>
+    {% for question in latest_question_list %}
+        <li><a href="/app1/{{ question.id }}/">{{question.question_text }} </a>   <br>(published: {{ question.pub_date }})</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Sorry but this question is not exist</p>
+{% endif %}

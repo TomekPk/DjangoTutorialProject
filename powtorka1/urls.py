@@ -17,9 +17,9 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 urlpatterns = [
-    url(r'^questionnaire/', include('questionnaire.urls')),
-    url(r'^questionnaire/contact/', include('questionnaire.urls')),
-    url(r'^questionnaire/appinfo/', include('questionnaire.urls')),
+    url(r'^app1/', include('app1.urls')),
+    url(r'^app1/contact/', include('app1.urls')),
+    url(r'^app1/appinfo/', include('app1.urls')),
     url(r'^admin/', admin.site.urls),
 
 ]

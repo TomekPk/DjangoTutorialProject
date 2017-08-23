@@ -1,10 +1,11 @@
 
-from django.http import HttpResponse
-from .models import MyQuestion
+from django.http import HttpResponseRedirect, HttpResponse
+from .models import MyQuestion, MyChoice
 # from django.shortcuts import render # it is common idiom to load a template
 from django.template import loader
 from django.http import Http404
 from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
 
 '''
 # LONG VIEW using HttpResponse
@@ -45,7 +46,21 @@ def detail_view(request, question_id):
     return render(request,'app1/detail.html',{'question':question})
 
 def results_view(request, question_id):
-    return HttpResponse("You are at the results_view and You are looking at question %s." % question_id)
+    question = get_object_or_404(MyQuestion, pk=question_id)
+    return render(request, 'app1/results.html', {'question': question})
+    #return HttpResponse("You are at the results_view and You are looking at question %s." % question_id)
 
 def vote_view(request, question_id):
-    return HttpResponse("You are at the vote_view and You are looking at question %s." % question_id)
+    question = get_object_or_404(MyQuestion, pk=question_id)
+    try:
+        selected_choice = question.mychoice_set.get(pk=request.POST['choice'])
+    except (KeyError, MyChoice.DoesNotExist):
+        return render(request, 'app1/detail.html', {
+        'question':question,
+        'error_message': "You didn't select choice.",
+        })
+    else:
+        selected_choice.votes +=1
+        selected_choice.save()
+        return HttpResponseRedirect(reverse('app1:results_view', args=(question.id,)))
+    #return HttpResponse("You are at the vote_view and You are looking at question %s" % question_id)
